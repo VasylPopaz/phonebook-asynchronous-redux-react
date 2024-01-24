@@ -1,58 +1,36 @@
-import { useState } from 'react';
-import { Form, FormInput, FormLabel } from './Phonebook.styled';
+import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { selectContacts } from 'state/selectors';
-import { addContact } from 'state/contactSlice';
-import { Button } from 'components/Button/Button.styled';
+import { addContact } from 'state/operations';
+import { AddButton, Form, FormInput, FormLabel } from './Phonebook.styled';
 
-export function Phonebook({ onSubmit }) {
+export function Phonebook() {
   const contacts = useSelector(selectContacts);
   const dispatch = useDispatch();
 
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const { register, handleSubmit, reset } = useForm();
+  const submit = data => {
+    if (
+      contacts.find(elem => elem.name.toLowerCase() === data.name.toLowerCase())
+    )
+      return toast.warning(`${data.name} is already in contacts!`);
 
-  const handleChange = event => {
-    const { name, value } = event.target;
-    const obj = {
-      name: () => setName(value),
-      number: () => setNumber(value),
-    };
-    return obj[name]();
-  };
-
-  const handleSubmit = event => {
-    event.preventDefault();
-    !contacts.find(elem => elem.name.toLowerCase() === name.toLowerCase())
-      ? dispatch(addContact({ name, number }))
-      : alert(`${name} is already in contacts!`);
-    setName('');
-    setNumber('');
+    dispatch(addContact(data));
+    reset();
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit(submit)}>
       <FormLabel>
         Name
-        <FormInput
-          type="text"
-          name="name"
-          value={name}
-          onChange={handleChange}
-          required
-        />
+        <FormInput {...register('name')} type="text" required />
       </FormLabel>
       <FormLabel>
         Number
-        <FormInput
-          type="tel"
-          name="number"
-          value={number}
-          onChange={handleChange}
-          required
-        />
+        <FormInput {...register('number')} type="tel" required />
       </FormLabel>
-      <Button type="submit">Add contact</Button>
+      <AddButton type="submit">Add contact</AddButton>
     </Form>
   );
 }

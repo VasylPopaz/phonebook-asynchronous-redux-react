@@ -1,40 +1,35 @@
-import React from 'react';
-import { nanoid } from 'nanoid';
-import { ContactsDescr, ContactsItem, ContactsList } from './Contacts.styled';
+import { useEffect } from 'react';
+import { nanoid } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts, selectFilter } from 'state/selectors';
-import { deleteContact } from 'state/contactSlice';
-import { Button } from 'components/Button/Button.styled';
+import { selectFilteredContacts } from 'state/selectors';
+import { ContactsDescr, ContactsList, DeleteButton } from './Contacts.styled';
+import { fetchContacts, deleteContact } from 'state/operations';
 
 export const Contacts = () => {
-  const contacts = useSelector(selectContacts);
-  const filter = useSelector(selectFilter);
-
+  const filteredContacts = useSelector(selectFilteredContacts);
   const dispatch = useDispatch();
 
-  const getFilteredContacts = () => {
-    const normalizedFilter = filter.toLowerCase();
-    return contacts.filter(elem =>
-      elem.name.toLowerCase().includes(normalizedFilter)
-    );
-  };
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
-  const filteredContacts = getFilteredContacts();
   return (
     <ContactsList>
-      {filteredContacts.map(elem => {
+      {filteredContacts.map((elem, index) => {
         return (
-          <ContactsItem key={nanoid()}>
-            <ContactsDescr>
-              {elem.name}: {elem.number}
-            </ContactsDescr>
-            <Button
-              type="button"
-              onClick={() => dispatch(deleteContact(elem.id))}
-            >
-              Delete
-            </Button>
-          </ContactsItem>
+          <li key={nanoid()}>
+            <div>
+              <ContactsDescr>
+                {elem.name}: {elem.number}
+              </ContactsDescr>
+              <DeleteButton
+                type="button"
+                onClick={() => dispatch(deleteContact(elem.id))}
+              >
+                Delete
+              </DeleteButton>
+            </div>
+          </li>
         );
       })}
     </ContactsList>
