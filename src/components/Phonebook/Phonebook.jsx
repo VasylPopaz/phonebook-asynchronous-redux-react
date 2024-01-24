@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Form, FormInput, FormLabel } from './Phonebook.styled';
-import { Button } from 'components/Button.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectContacts } from 'state/selectors';
 import { addContact } from 'state/contactSlice';
+import { Button } from 'components/Button/Button.styled';
 
 export function Phonebook({ onSubmit }) {
   const contacts = useSelector(selectContacts);

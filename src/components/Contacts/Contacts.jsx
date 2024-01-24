@@ -1,10 +1,10 @@
 import React from 'react';
 import { nanoid } from 'nanoid';
-import { Button } from 'components/Button.styled';
 import { ContactsDescr, ContactsItem, ContactsList } from './Contacts.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectContacts, selectFilter } from 'state/selectors';
 import { deleteContact } from 'state/contactSlice';
+import { Button } from 'components/Button/Button.styled';
 
 export const Contacts = () => {
   const contacts = useSelector(selectContacts);
