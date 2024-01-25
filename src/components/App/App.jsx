@@ -16,7 +16,7 @@ export function App() {
   const isLoading = useSelector(selectIsLoading);
   const error = useSelector(selectError);
   return (
-    <div>
+    <>
       <Container>
         <Section title="Phonebook">
           <Phonebook />
@@ -25,14 +25,14 @@ export function App() {
         <Section title="Contacts">
           <Filter />
           <Contacts />
+          {contacts.length && !filteredContacts.length ? (
+            <StyledTitle>No matches!</StyledTitle>
+          ) : null}
         </Section>
       </Container>
-      {contacts.length && !filteredContacts.length ? (
-        <StyledTitle>No matches!</StyledTitle>
-      ) : null}
       {error && <StyledTitle>{error}!</StyledTitle>}
       {isLoading && <Loader />}
       <ToastContainer autoClose={2000} />
-    </div>
+    </>
   );
 }

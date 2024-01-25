@@ -53,6 +53,7 @@ export const ContactsList = styled.ol`
 export const ContactsDescr = styled.p`
   font-weight: 600;
   font-size: 18px;
+  color: black;
 `;
 export const DeleteButton = styled.button`
   padding: 12px 8px;
